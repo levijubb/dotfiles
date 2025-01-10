@@ -1,0 +1,12 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+[memory_usage]
+format = "$symbol[${ram}( | ${swap})]($style) "
+threshold = 20
+style = "bold dimmed white"
+disabled = false
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
+

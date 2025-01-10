@@ -1,0 +1,113 @@
+# add helper functions
+source $DEVPATH/dotfiles/scripts/__utils.sh
+
+# add all files and commmit with msg
+function gac() {
+  git add .
+  if [ $# -eq 0 ]; then
+    echo -n "commit msg: "
+    read msg
+  else
+    msg="$*"
+  fi
+  git commit -m "$msg"
+}
+
+function gacp() {
+  gac
+  gps
+}
+
+# generate sha256 from input
+function sha() {
+  result=$(echo -n $1 | shasum -a 256 | cut -d ' ' -f1)
+  echo $result | pbcopy
+  echo $result
+  echo "Result coppied to clipboard."
+}
+
+# copy current working directory to clipboard
+function cpa() {
+  if command -v pbcopy >/dev/null; then
+    printf "%s" "$PWD" | pbcopy
+    printf "%s\n" "('$(basename "$PWD")') path copied to clipboard."
+  else
+    printf "%s\n" "Error: pbcopy command might not be installed"
+  fi
+}
+
+# open directory as a project
+function open-project() {
+  # eneter directory of project or target directory if entry is a symlink
+  if [[ -L $DEVPATH/$project ]]; then
+    cd $(readlink $DEVPATH/$project)
+  else
+    cd $DEVPATH/$project
+  fi
+
+  # show project information
+  if [[ -d .git ]]; then
+    if [ $(tput cols) -lt 80 ]; then
+      figlet $project
+    else
+      onefetch
+    fi
+  fi
+
+  # switch node version if .nvmrc exists
+  if [ -f .nvmrc ]; then
+    nvm use
+  fi
+
+  # prompt to open in code
+  echo -n "open editor? ('): "
+  read open
+  if [[ $open == "'" ]]; then
+    $EDITOR .
+  fi
+}
+
+# opens project via fzf search
+function dev() {
+  export project=$(fd . $DEVPATH --type=directory --type=l --max-depth=1 --color always | awk -F "/" '{print $5}' | fzf --ansi --preview="figlet {}; onefetch  $DEVPATH/{}" --preview-window=right:70%)
+
+  if [[ $PWD == $DEVPATH/$project ]]; then
+    echo "burh you already here"
+    return 0
+  fi
+
+  if [[ -z "$project" ]]; then
+    redtext "cancelled"
+  else
+    echo "projectsitory found locally, starting dev"
+    open-project $project
+  fi
+}
+
+# adds project to dev project list via symlink
+function adddevproject() {
+  # check if project name is provided
+  if [ -z $1 ]; then
+    redtext "usage: adddevproject <project-name>"
+    return 1
+  fi
+
+  # check if project exists
+  if [ -d $DEVPATH/$1 ]; then
+    redtext "project already exists in dev project list"
+    return 1
+  else
+    # create symlink
+    ln -s $PWD $DEVPATH/$1
+    echo "$(basename $PWD) added to dev projects"
+  fi
+}
+
+# Create and navigate to directory
+function nd() {
+  mkdir -p -- "$1" && cd -P -- "$1"
+}
+
+function pkill() {
+  ps aux | fzf --height 40% --layout=reverse --prompt='Select process to kill: ' | awk '{print $2}' | xargs -r sudo kill
+}
