@@ -1,6 +1,6 @@
 # constants
 export DEVPATH="$HOME/dev"
-export EDITOR="zed"
+export D_EDITOR="zed"
 
 # commands
 alias gen-pass="openssl rand -base64"

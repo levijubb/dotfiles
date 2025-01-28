@@ -63,7 +63,7 @@ function open-project() {
   echo -n "open editor? ('): "
   read open
   if [[ $open == "'" ]]; then
-    $EDITOR .
+    $D_EDITOR .
   fi
 }
 
