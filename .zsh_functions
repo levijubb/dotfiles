@@ -36,6 +36,44 @@ function cpa() {
   fi
 }
 
+# Takes url from clipboard or argument to resolve full Microsoft outlook link
+function forFuckSakeOutlook() {
+  local url
+  # search clipboard for url first
+  if [ -n "$(pbpaste 2>/dev/null)" ]; then
+    url=$(pbpaste)
+    if ! isUrl "$url"; then
+      echo "TRIED: \"${url}\""
+      redtext "Invalid URL"
+      return 1
+    fi
+  else
+    # check if url is provided as argument
+    url=$1
+    if ! isUrl "$url"; then
+      echo "TRIED: \"${url}\""
+      redtext "Invalid URL"
+      return 1
+    fi
+  fi
+
+  # decode until no more encodings need to do this incase of multiple redirects and thus multiple encoding passes
+  local decoded=$url
+  local prev_decoded=""
+  while [ "$decoded" != "$prev_decoded" ]; do
+      prev_decoded="$decoded"
+      decoded=$(echo "$decoded" | nkf -w --url-input)
+  done
+
+  local targetUrl=$(echo "$decoded" | awk -F 'https://' '{print "https://" $NF}')
+
+  local cleanedUrl=$(echo $targetUrl | sed 's/?.*//')
+
+  echo "$cleanedUrl" | pbcopy 2>/dev/null || tru
+  echo "Saved to clipboard - $cleanedUrl"
+}
+
+
 # open directory as a project
 function open-project() {
   # eneter directory of project or target directory if entry is a symlink
