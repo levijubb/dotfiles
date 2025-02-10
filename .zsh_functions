@@ -13,9 +13,40 @@ function gac() {
   git commit -m "$msg"
 }
 
+# commit with message and push
 function gacp() {
   gac
   gps
+}
+
+# quick checkout or choose branch with fzf
+gc() {
+  if [[ -z "$1" ]]; then
+    redtext "Usage: gc <search>"
+    return 1
+  fi
+
+  local matches
+  matches=$(git branch --list | sed 's/^..//' | grep -i "$1")
+
+  if [[ -z "$matches" ]]; then
+    redtext "No matching branches found."
+    return 1
+  fi
+
+  if [[ $(echo "$matches" | wc -l) -eq 1 ]]; then
+    git checkout "$matches"
+  else
+    local selected
+    selected=$(echo "$matches" | fzf --preview "git log -1 --color=always --pretty=format:'%C(yellow)%h %C(green)%s %C(blue)- %C(cyan)%an, %C(magenta)%ar' {+}")
+
+    if [[ -n "$selected" ]]; then
+      git checkout "$selected"
+    else
+      redtext "No branch selected."
+      return 1
+    fi
+  fi
 }
 
 # generate sha256 from input
@@ -61,8 +92,8 @@ function forFuckSakeOutlook() {
   local decoded=$url
   local prev_decoded=""
   while [ "$decoded" != "$prev_decoded" ]; do
-      prev_decoded="$decoded"
-      decoded=$(echo "$decoded" | nkf -w --url-input)
+    prev_decoded="$decoded"
+    decoded=$(echo "$decoded" | nkf -w --url-input)
   done
 
   local targetUrl=$(echo "$decoded" | awk -F 'https://' '{print "https://" $NF}')
@@ -72,7 +103,6 @@ function forFuckSakeOutlook() {
   echo "$cleanedUrl" | pbcopy 2>/dev/null || tru
   echo "Saved to clipboard - $cleanedUrl"
 }
-
 
 # open directory as a project
 function open-project() {
