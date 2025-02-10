@@ -20,7 +20,6 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
-PATH=~/.console-ninja/.bin:$PATH
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # bun completions
@@ -33,6 +32,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 #rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+# LM Studio
+export PATH="$PATH:/Users/jubby/.lmstudio/bin"
 
 # pnpm
 export PNPM_HOME="/Users/jubby/Library/pnpm"
@@ -48,3 +50,8 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # starship
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 eval "$(starship init zsh)"
+
+# start tmux if not already running
+if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+  tmux
+fi
