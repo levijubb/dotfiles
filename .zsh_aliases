@@ -7,6 +7,7 @@ alias gen-pass="openssl rand -base64"
 alias ip="ifconfig | grep broadcast | cut -d ' ' -f2"
 alias pserver="ip && python3 -m http.server --directory"
 alias ll="eza --long --icons --header --git -a"
+alias tree="eza --tree"
 
 # git aliases
 alias gpl="git pull"
