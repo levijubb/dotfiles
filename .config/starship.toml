@@ -10,3 +10,5 @@ disabled = false
 threshold = 20
 style = "bold red"
 
+[aws]
+disabled = true
