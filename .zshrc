@@ -52,6 +52,6 @@ export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 eval "$(starship init zsh)"
 
 # start tmux if not already running
-if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-  tmux
-fi
+# if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+#   tmux
+# fi
