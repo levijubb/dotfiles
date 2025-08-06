@@ -33,15 +33,22 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
-# LM Studio
-export PATH="$PATH:/Users/jubby/.lmstudio/bin"
-
 # pnpm
 export PNPM_HOME="/Users/jubby/Library/pnpm"
 case ":$PATH:" in
 *":$PNPM_HOME:"*) ;;
 *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+
+# other shizz
+export HOME_LOCAL="/Users/jubby/.local/bin"
+case ":$PATH:" in
+*":$*HOME_LOCAL*:"*) ;;
+*) export PATH="$HOME_LOCAL:$PATH" ;;
+esac
+
+# dotnet lsp override for zed editor
+export DOTNET_ROOT="$(dirname "$(which dotnet)")"
 
 # others
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -50,8 +57,3 @@ source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # starship
 export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 eval "$(starship init zsh)"
-
-# start tmux if not already running
-# if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
-#   tmux
-# fi
