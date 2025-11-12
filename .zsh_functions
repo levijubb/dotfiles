@@ -153,10 +153,10 @@ function dev() {
 }
 
 # adds project to dev project list via symlink
-function adddevproject() {
+function mkdevlink() {
   # check if project name is provided
   if [ -z $1 ]; then
-    redtext "usage: adddevproject <project-name>"
+    redtext "usage: mkdevlink <project-name>"
     return 1
   fi
 
