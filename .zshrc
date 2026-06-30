@@ -1,5 +1,3 @@
-autoload -Uz compinit && compinit
-
 # Source functions and aliases
 source ~/dev/dotfiles/.zsh_aliases
 source ~/dev/dotfiles/.zsh_functions
@@ -15,10 +13,34 @@ fi
 # zoxide init
 eval "$(zoxide init zsh)"
 
-# NVM Configuration
+# NVM Configuration (lazy loaded)
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+# Lazy load nvm - only load when actually needed
+nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+
+node() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  node "$@"
+}
+
+npm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  npm "$@"
+}
+
+npx() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  npx "$@"
+}
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -40,10 +62,14 @@ case ":$PATH:" in
 *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# go
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+
 # other shizz
 export HOME_LOCAL="/Users/jubby/.local/bin"
 case ":$PATH:" in
-*":$*HOME_LOCAL*:"*) ;;
+*":$HOME_LOCAL:"*) ;;
 *) export PATH="$HOME_LOCAL:$PATH" ;;
 esac
 

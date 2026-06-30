@@ -51,10 +51,10 @@ gc() {
 
 # generate sha256 from input
 function sha() {
-  result=$(echo -n $1 | shasum -a 256 | cut -d ' ' -f1)
-  echo $result | pbcopy
-  echo $result
-  echo "Result coppied to clipboard."
+  result=$(echo -n "$1" | shasum -a 256 | cut -d ' ' -f1)
+  echo "$result" | pbcopy
+  echo "$result"
+  echo "Result copied to clipboard."
 }
 
 # copy current working directory to clipboard
@@ -100,13 +100,13 @@ function forFuckSakeOutlook() {
 
   local cleanedUrl=$(echo $targetUrl | sed 's/?.*//')
 
-  echo "$cleanedUrl" | pbcopy 2>/dev/null || tru
+  echo "$cleanedUrl" | pbcopy 2>/dev/null || true
   echo "Saved to clipboard - $cleanedUrl"
 }
 
 # open directory as a project
 function open-project() {
-  # eneter directory of project or target directory if entry is a symlink
+  # enter directory of project or target directory if entry is a symlink
   if [[ -L $DEVPATH/$project ]]; then
     cd $(readlink $DEVPATH/$project)
   else
@@ -140,14 +140,14 @@ function dev() {
   export project=$(fd . $DEVPATH --type=directory --type=l --max-depth=1 --color always | awk -F "/" '{print $5}' | fzf --ansi --preview="figlet {}; onefetch  $DEVPATH/{}" --preview-window=right:70%)
 
   if [[ $PWD == $DEVPATH/$project ]]; then
-    echo "burh you already here"
+    echo "bruh you already here"
     return 0
   fi
 
   if [[ -z "$project" ]]; then
     redtext "cancelled"
   else
-    echo "projectsitory found locally, starting dev"
+    echo "repository found locally, starting dev"
     open-project $project
   fi
 }
@@ -176,6 +176,6 @@ function nd() {
   mkdir -p -- "$1" && cd -P -- "$1"
 }
 
-function pkill() {
+function fkill() {
   ps aux | fzf --height 40% --layout=reverse --prompt='Select process to kill: ' | awk '{print $2}' | xargs -r sudo kill
 }

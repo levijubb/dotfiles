@@ -3,7 +3,7 @@ function redtext() {
 }
 
 function nicedatetime() {
-  echo $(date +"%D-%T")
+  date +"%D-%T"
 }
 
 function isUrl() {
