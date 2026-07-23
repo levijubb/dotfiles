@@ -20,3 +20,4 @@ alias gcb="git cb"
 
 # agents
 alias cc="claude"
+alias gg="grok"
