@@ -1,6 +1,17 @@
 # add helper functions
 source $DEVPATH/dotfiles/scripts/__utils.sh
 
+# stash tracked and untracked changes with a message
+function gst() {
+  if [ $# -eq 0 ]; then
+    echo -n "stash msg: "
+    read msg
+  else
+    msg="$*"
+  fi
+  git stash push -u -m "$msg"
+}
+
 # add all files and commmit with msg
 function gac() {
   git add .
